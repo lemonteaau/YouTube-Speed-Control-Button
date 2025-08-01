@@ -1,10 +1,10 @@
 // ==UserScript==
-// @name         YouTube Speed Control Button
+// @name         YouTube Speed Control Button (Fixed)
 // @namespace    http://tampermonkey.net/
-// @version      0.1
-// @description  Adds a speed control button to YouTube that cycles through 1x, 1.5x, and 2x speeds
+// @version      0.2
+// @description  Adds a speed control button that resets correctly when changing videos.
 // @author       lemontea
-// @match        https://www.youtube.com/*
+// @match        *://*.youtube.com/*
 // @grant        none
 // ==/UserScript==
 
@@ -65,24 +65,25 @@
     return true;
   }
 
-  function initSpeedButton() {
-    if (!createSpeedButton()) {
-      setTimeout(initSpeedButton, 1000);
-    }
+  function initializeOrReset() {
+    setTimeout(() => {
+      createSpeedButton();
+
+      currentSpeedIndex = 0;
+      const defaultSpeed = speeds[currentSpeedIndex];
+
+      const buttonContainer = document.querySelector(".ytp-speed-button-container");
+      const buttonContent = document.querySelector(".ytp-speed-button-content");
+
+      if (buttonContainer && buttonContent) {
+        buttonContainer.setAttribute("title", `Playback Speed: ${defaultSpeed}x`);
+        buttonContent.textContent = `${defaultSpeed}x`;
+      }
+    }, 1000);
   }
 
-  let lastUrl = location.href;
-  const observer = new MutationObserver(() => {
-    if (location.href !== lastUrl) {
-      lastUrl = location.href;
-      setTimeout(initSpeedButton, 1500); // Wait for the player to load
-    }
-  });
+  window.addEventListener("yt-navigate-finish", initializeOrReset);
 
-  observer.observe(document, { subtree: true, childList: true });
+  initializeOrReset();
 
-  initSpeedButton();
-
-  // Additional check for dynamic loading
-  window.addEventListener("yt-navigate-finish", initSpeedButton);
 })();
