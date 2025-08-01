@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         YouTube Speed Control Button (Fixed)
+// @name         YouTube Speed Control Button
 // @namespace    http://tampermonkey.net/
 // @version      0.2
 // @description  Adds a speed control button that resets correctly when changing videos.
