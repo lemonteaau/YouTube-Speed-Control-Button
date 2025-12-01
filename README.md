@@ -2,7 +2,7 @@
 
 A simple userscript that adds a speed control button to YouTube's video player interface.
 
-![SCR-20250323-nggo](https://github.com/user-attachments/assets/3b2dcd0c-a0e4-4a7f-baf7-33ac64cf95c4)
+<img width="314" height="79" alt="image" src="https://github.com/user-attachments/assets/d79a6656-3e98-427f-8192-128d3998693e" />
 
 ## Features
 
