@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Speed Control Button
 // @namespace    http://tampermonkey.net/
-// @version      0.2
+// @version      0.3
 // @description  Adds a speed control button that resets correctly when changing videos.
 // @author       lemontea
 // @match        *://*.youtube.com/*
@@ -15,31 +15,33 @@
   const speeds = [1, 1.5, 2];
 
   function createSpeedButton() {
-    const rightControls = document.querySelector(".ytp-right-controls");
-    if (!rightControls) return false;
+    const rightControlsLeft = document.querySelector(".ytp-right-controls-left");
+    if (!rightControlsLeft) return false;
 
     if (document.querySelector(".ytp-speed-button-container")) return true;
 
-    const buttonContainer = document.createElement("div");
-    buttonContainer.className = "ytp-speed-button-container";
-    buttonContainer.style.display = "inline-block";
-    buttonContainer.style.width = "36px";
-    buttonContainer.style.height = "36px";
+    const subtitlesButton = rightControlsLeft.querySelector(".ytp-subtitles-button");
+    if (!subtitlesButton) return false;
+
+    const buttonContainer = document.createElement("button");
+    buttonContainer.className = "ytp-speed-button-container ytp-button";
+    buttonContainer.style.padding = "0 8px";
+    buttonContainer.style.minWidth = "48px";
+    buttonContainer.style.height = "100%";
+    buttonContainer.style.display = "flex";
+    buttonContainer.style.alignItems = "center";
+    buttonContainer.style.justifyContent = "center";
     buttonContainer.style.position = "relative";
-    buttonContainer.style.alignSelf = "center";
     buttonContainer.style.cursor = "pointer";
     buttonContainer.setAttribute("title", "Playback Speed: 1x");
+    buttonContainer.setAttribute("data-priority", "4");
 
     const buttonContent = document.createElement("div");
     buttonContent.className = "ytp-speed-button-content";
-    buttonContent.style.width = "100%";
-    buttonContent.style.height = "100%";
-    buttonContent.style.display = "flex";
-    buttonContent.style.alignItems = "center";
-    buttonContent.style.justifyContent = "center";
     buttonContent.style.color = "white";
     buttonContent.style.fontSize = "14px";
     buttonContent.style.fontWeight = "bold";
+    buttonContent.style.lineHeight = "1";
     buttonContent.textContent = "1x";
 
     buttonContainer.appendChild(buttonContent);
@@ -57,10 +59,7 @@
       buttonContent.textContent = `${newSpeed}x`;
     });
 
-    const parent = rightControls.parentNode;
-    if (parent) {
-      parent.insertBefore(buttonContainer, rightControls);
-    }
+    rightControlsLeft.insertBefore(buttonContainer, subtitlesButton);
 
     return true;
   }
